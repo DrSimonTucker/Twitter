@@ -109,6 +109,10 @@ public class OAuthHandler {
 		return resp.getBody();
 	}
 
+	public String getHome() throws IOException {
+		return getBody("http://api.twitter.com/1/statuses/user_timeline.xml");
+	}
+
 	private Properties getProperties() throws IOException {
 		String propertiesLocation = System.getProperty("user.home")
 				+ File.separator + ".com262-twitter.properties";

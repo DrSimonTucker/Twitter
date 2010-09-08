@@ -11,11 +11,25 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import uk.ac.shef.dcs.twitter.handlers.Tweets;
 import uk.ac.shef.dcs.twitter.handlers.TwitterUserName;
 
 public class TwitterProxy {
 
 	static OAuthHandler handler = new OAuthHandler();
+
+	public static Tweet[] getLatestTweets(int n) {
+		Tweet[] tweetArr = new Tweet[n];
+
+		try {
+			String xmlString = handler.getHome();
+			parse(xmlString, new Tweets(tweetArr));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return tweetArr;
+	}
 
 	public static String getTwitterUserName() {
 		try {
@@ -31,7 +45,9 @@ public class TwitterProxy {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Username = " + TwitterProxy.getTwitterUserName());
+		Tweet[] tweets = TwitterProxy.getLatestTweets(5);
+		for (Tweet tweet : tweets)
+			System.err.println(tweet);
 	}
 
 	private static DefaultHandler parse(String str, DefaultHandler handler)
