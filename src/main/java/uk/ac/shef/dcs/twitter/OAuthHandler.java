@@ -23,10 +23,6 @@ import org.scribe.oauth.Token;
 public class OAuthHandler {
 	private static Scribe scribeSingleton;
 
-	public static void main(String[] args) throws IOException {
-		OAuthHandler handler = new OAuthHandler();
-		System.out.println(handler.getTimelineString());
-	}
 
 	public String authenticate() throws IOException {
 		return getBody("http://api.twitter.com/1/account/verify_credentials.xml");
@@ -35,11 +31,9 @@ public class OAuthHandler {
 	private void createPropsFile(File f) throws IOException {
 		Properties props = new Properties();
 
-		// Get the cons=umer Key
-		String consKey = JOptionPane
-				.showInputDialog("Please enter the Consumer Key");
-		String consSec = JOptionPane
-				.showInputDialog("Please enter the Consumer Secret");
+		// Get the consumer Key
+		String consKey = "pBUj79RRk82JbO2eeKQ";
+		String consSec = "DBuBIFPkzgZOdKWLnysCTUlNyOokBD1gJX7HtGFBdY";
 
 		// Set the properties
 		props.put("consumer.key", consKey);
