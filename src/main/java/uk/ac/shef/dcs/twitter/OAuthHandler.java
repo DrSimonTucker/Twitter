@@ -23,7 +23,6 @@ import org.scribe.oauth.Token;
 public class OAuthHandler {
 	private static Scribe scribeSingleton;
 
-
 	public String authenticate() throws IOException {
 		return getBody("http://api.twitter.com/1/account/verify_credentials.xml");
 	}
@@ -94,6 +93,10 @@ public class OAuthHandler {
 		return null;
 	}
 
+	public String getAll() throws IOException {
+		return getBody("http://api.twitter.com/1/statuses/public_timeline.xml");
+	}
+
 	private String getBody(String url) throws IOException {
 		Token aToken = getAccessToken();
 		Scribe scribe = getScribe();
@@ -101,6 +104,10 @@ public class OAuthHandler {
 		scribe.signRequest(request, aToken);
 		Response resp = request.send();
 		return resp.getBody();
+	}
+
+	public String getFriends() throws IOException {
+		return getBody("http://api.twitter.com/1/statuses/friends_timeline.xml");
 	}
 
 	public String getHome() throws IOException {

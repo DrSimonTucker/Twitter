@@ -18,11 +18,37 @@ public class TwitterProxy {
 
 	static OAuthHandler handler = new OAuthHandler();
 
+	public static Tweet[] getFriendsTweets(int n) {
+		Tweet[] tweetArr = new Tweet[n];
+
+		try {
+			String xmlString = handler.getFriends();
+			parse(xmlString, new Tweets(tweetArr));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return tweetArr;
+	}
+
+	public static Tweet[] getLatestPublicTweets(int n) {
+		Tweet[] tweetArr = new Tweet[n];
+
+		try {
+			String xmlString = handler.getAll();
+			parse(xmlString, new Tweets(tweetArr));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return tweetArr;
+	}
+
 	public static Tweet[] getLatestTweets(int n) {
 		Tweet[] tweetArr = new Tweet[n];
 
 		try {
-			String xmlString = handler.getHome();
+			String xmlString = handler.getFriends();
 			parse(xmlString, new Tweets(tweetArr));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -45,11 +71,10 @@ public class TwitterProxy {
 	}
 
 	public static void main(String[] args) {
-		Tweet[] tweets = TwitterProxy.getLatestTweets(5);
+		Tweet[] tweets = TwitterProxy.getFriendsTweets(5);
 		for (Tweet tweet : tweets)
 			System.err.println(tweet);
 	}
-
 	private static DefaultHandler parse(String str, DefaultHandler handler)
 			throws IOException {
 		try {
