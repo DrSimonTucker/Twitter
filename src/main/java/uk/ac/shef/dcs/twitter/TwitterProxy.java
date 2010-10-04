@@ -14,78 +14,158 @@ import org.xml.sax.helpers.DefaultHandler;
 import uk.ac.shef.dcs.twitter.handlers.Tweets;
 import uk.ac.shef.dcs.twitter.handlers.TwitterUserName;
 
-public class TwitterProxy {
+/**
+ * Proxy for accessing twitter
+ * 
+ * @author sat
+ * 
+ */
+public final class TwitterProxy
+{
 
-	static OAuthHandler handler = new OAuthHandler();
+   /** The Authentication handler */
+   private static OAuthHandler handler = new OAuthHandler();
 
-	public static Tweet[] getFriendsTweets(int n) {
-		Tweet[] tweetArr = new Tweet[n];
+   /** Flag to indicate we have opted in to twitter */
+   private static boolean optIn = true;
 
-		try {
-			String xmlString = handler.getFriends();
-			parse(xmlString, new Tweets(tweetArr));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   /**
+    * Get the Tweets from your friends
+    * 
+    * @param n
+    *           The number of tweets to collect
+    * @return An array of the available tweets
+    */
+   public static Tweet[] getFriendsTweets(final int n)
+   {
+      Tweet[] tweetArr = new Tweet[n];
 
-		return tweetArr;
-	}
+      try
+      {
+         String xmlString = handler.getFriends(optIn);
+         parse(xmlString, new Tweets(tweetArr));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
-	public static Tweet[] getLatestPublicTweets(int n) {
-		Tweet[] tweetArr = new Tweet[n];
+      return tweetArr;
+   }
 
-		try {
-			String xmlString = handler.getAll();
-			parse(xmlString, new Tweets(tweetArr));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   /**
+    * Get the latest public tweets
+    * 
+    * @param n
+    *           The number of tweets to collect
+    * @return An array of {@link Tweet}
+    */
+   public static Tweet[] getLatestPublicTweets(final int n)
+   {
+      Tweet[] tweetArr = new Tweet[n];
 
-		return tweetArr;
-	}
+      try
+      {
+         String xmlString = handler.getAll(optIn);
+         parse(xmlString, new Tweets(tweetArr));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
-	public static Tweet[] getLatestTweets(int n) {
-		Tweet[] tweetArr = new Tweet[n];
+      return tweetArr;
+   }
 
-		try {
-			String xmlString = handler.getFriends();
-			parse(xmlString, new Tweets(tweetArr));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+   /**
+    * Get the latest tweets from your friends
+    * 
+    * @param n
+    *           The number of tweets to collect
+    * @return An array of {@link Tweet}
+    */
+   public static Tweet[] getLatestTweets(final int n)
+   {
+      Tweet[] tweetArr = new Tweet[n];
 
-		return tweetArr;
-	}
+      try
+      {
+         String xmlString = handler.getFriends(optIn);
+         parse(xmlString, new Tweets(tweetArr));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
-	public static String getTwitterUserName() {
-		try {
-			String xmlString = handler.authenticate();
-			TwitterUserName parsed = (TwitterUserName) parse(xmlString,
-					new TwitterUserName());
-			return parsed.getUserName();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+      return tweetArr;
+   }
 
-		return "";
-	}
+   /**
+    * Gets your twitter username
+    * 
+    * @return a {@link String} of your username
+    */
+   public static String getTwitterUserName()
+   {
+      try
+      {
+         String xmlString = handler.authenticate(optIn);
+         TwitterUserName parsed = (TwitterUserName) parse(xmlString, new TwitterUserName());
+         return parsed.getUserName();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
-	public static void main(String[] args) {
-		Tweet[] tweets = TwitterProxy.getFriendsTweets(5);
-		for (Tweet tweet : tweets)
-			System.err.println(tweet);
-	}
-	private static DefaultHandler parse(String str, DefaultHandler handler)
-			throws IOException {
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			parser.parse(new InputSource(new StringReader(str)), handler);
-		} catch (SAXException e) {
-			throw new IOException(e);
-		} catch (ParserConfigurationException e) {
-			throw new IOException(e);
-		}
+      return "";
+   }
 
-		return handler;
-	}
+   /**
+    * Opts you out of using twitter
+    */
+   public static void optOut()
+   {
+      optIn = false;
+   }
+
+   /**
+    * Helper method for parsing the XML stream
+    * 
+    * @param str
+    *           The String to parse
+    * @param handlerIn
+    *           The handler to use
+    * @return THe handler, having processed the stream
+    * @throws IOException
+    *            If something goes wrong with the network
+    */
+   private static DefaultHandler parse(final String str, final DefaultHandler handlerIn)
+         throws IOException
+   {
+      try
+      {
+         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+         parser.parse(new InputSource(new StringReader(str)), handlerIn);
+      }
+      catch (SAXException e)
+      {
+         throw new IOException(e);
+      }
+      catch (ParserConfigurationException e)
+      {
+         throw new IOException(e);
+      }
+
+      return handlerIn;
+   }
+
+   /**
+    * Blocking constructor
+    */
+   private TwitterProxy()
+   {
+
+   }
 }

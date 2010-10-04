@@ -15,127 +15,234 @@ import java.util.Properties;
 import javax.swing.JOptionPane;
 
 import org.scribe.http.Request;
-import org.scribe.http.Response;
 import org.scribe.http.Request.Verb;
+import org.scribe.http.Response;
 import org.scribe.oauth.Scribe;
 import org.scribe.oauth.Token;
 
-public class OAuthHandler {
-	private static Scribe scribeSingleton;
+/**
+ * My class for dealing with Twitter OAuth and related functionality
+ * 
+ * @author sat
+ * 
+ */
+public class OAuthHandler
+{
+   /** The scribe singleton for handling OAuth */
+   private static Scribe scribeSingleton;
 
-	public String authenticate() throws IOException {
-		return getBody("http://api.twitter.com/1/account/verify_credentials.xml");
-	}
+   /**
+    * Authenticates the user
+    * 
+    * @param optIn
+    *           Flag indicating whether this person has opted in or not
+    * @return The body of the authentication method
+    * @throws IOException
+    *            if something goes wrong on the network
+    */
+   public final String authenticate(final boolean optIn) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/account/verify_credentials.xml", optIn);
+   }
 
-	private void createPropsFile(File f) throws IOException {
-		Properties props = new Properties();
+   /**
+    * Creates the required property
+    * 
+    * @param propFile
+    *           The file to store the properties in
+    * @throws IOException
+    *            If something goes wrong with writing the file
+    */
+   private void createPropsFile(final File propFile) throws IOException
+   {
+      Properties props = new Properties();
 
-		// Get the consumer Key
-		String consKey = "pBUj79RRk82JbO2eeKQ";
-		String consSec = "DBuBIFPkzgZOdKWLnysCTUlNyOokBD1gJX7HtGFBdY";
+      // Get the consumer Key
+      String consKey = "pBUj79RRk82JbO2eeKQ";
+      String consSec = "DBuBIFPkzgZOdKWLnysCTUlNyOokBD1gJX7HtGFBdY";
 
-		// Set the properties
-		props.put("consumer.key", consKey);
-		props.put("consumer.secret", consSec);
-		props.put("request.token.verb", "POST");
-		props
-				.put("request.token.url",
-						"http://twitter.com/oauth/request_token");
-		props.put("access.token.verb", "POST");
-		props.put("access.token.url", "http://twitter.com/oauth/access_token");
-		props.put("callback.url", "oob");
+      // Set the properties
+      props.put("consumer.key", consKey);
+      props.put("consumer.secret", consSec);
+      props.put("request.token.verb", "POST");
+      props.put("request.token.url", "http://twitter.com/oauth/request_token");
+      props.put("access.token.verb", "POST");
+      props.put("access.token.url", "http://twitter.com/oauth/access_token");
+      props.put("callback.url", "oob");
 
-		FileOutputStream fos = new FileOutputStream(f);
-		props.storeToXML(fos, null);
-		fos.close();
-	}
+      FileOutputStream fos = new FileOutputStream(propFile);
+      props.storeToXML(fos, null);
+      fos.close();
+   }
 
-	private Token getAccessToken() throws IOException {
-		File accessTokenFile = new File(System.getProperty("user.home")
-				+ File.separator + ".com262token");
+   /**
+    * Gets the access token for authentication
+    * 
+    * @return A valid Access Token
+    * @throws IOException
+    *            if the tokens cannot be found
+    */
+   private Token getAccessToken() throws IOException
+   {
+      File accessTokenFile = new File(System.getProperty("user.home") + File.separator
+            + ".com262token");
 
-		if (!accessTokenFile.exists()) {
-			try {
-				Scribe scribe = getScribe();
-				Token tok = scribe.getRequestToken();
+      if (!accessTokenFile.exists())
+      {
+         try
+         {
+            Scribe scribe = getScribe();
+            Token tok = scribe.getRequestToken();
 
-				// Take the user to the login page
-				String url = "https://twitter.com/oauth/authenticate?oauth_token="
-						+ tok.getToken();
-				Desktop.getDesktop().browse(new URI(url));
+            // Take the user to the login page
+            String url = "https://twitter.com/oauth/authenticate?oauth_token=" + tok.getToken();
+            Desktop.getDesktop().browse(new URI(url));
 
-				String verifier = JOptionPane
-						.showInputDialog("Enter PIN Code:");
-				Token aTok = scribe.getAccessToken(tok, verifier);
+            String verifier = JOptionPane.showInputDialog("Enter PIN Code:");
+            Token aTok = scribe.getAccessToken(tok, verifier);
 
-				// Store the access token
-				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(accessTokenFile));
-				oos.writeObject(aTok);
-				oos.close();
-			}
+            // Store the access token
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(accessTokenFile));
+            oos.writeObject(aTok);
+            oos.close();
+         }
 
-			catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-		}
+         catch (URISyntaxException e)
+         {
+            e.printStackTrace();
+         }
+      }
 
-		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
-					accessTokenFile));
-			Token tok = (Token) ois.readObject();
-			ois.close();
-			return tok;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+      try
+      {
+         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(accessTokenFile));
+         Token tok = (Token) ois.readObject();
+         ois.close();
+         return tok;
+      }
+      catch (ClassNotFoundException e)
+      {
+         e.printStackTrace();
+      }
 
-		return null;
-	}
+      return null;
+   }
 
-	public String getAll() throws IOException {
-		return getBody("http://api.twitter.com/1/statuses/public_timeline.xml");
-	}
+   /**
+    * Method to get all the public timeline statuses
+    * 
+    * @param optIn
+    *           Flag indicated whether this person has opted in
+    * @return A String of the response from Twitter of the public tweets
+    * @throws IOException
+    *            If something goes wrong with the network
+    */
+   public final String getAll(final boolean optIn) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/statuses/public_timeline.xml", optIn);
+   }
 
-	private String getBody(String url) throws IOException {
-		Token aToken = getAccessToken();
-		Scribe scribe = getScribe();
-		Request request = new Request(Verb.GET, url);
-		scribe.signRequest(request, aToken);
-		Response resp = request.send();
-		return resp.getBody();
-	}
+   /**
+    * Gets the body of a url, using the relevant authentication methods
+    * 
+    * @param url
+    *           The {@link String} of the URL to retrieve
+    * @param optIn
+    *           Flag inicating whether this person has opted in or not
+    * @return A String of the data retrieved from Twitter
+    * @throws IOException
+    *            If something goes wrong with the network
+    */
+   private String getBody(final String url, final boolean optIn) throws IOException
+   {
+      // Deal with people that have opted out
+      if (!optIn)
+         return "";
 
-	public String getFriends() throws IOException {
-		return getBody("http://api.twitter.com/1/statuses/friends_timeline.xml");
-	}
+      Token aToken = getAccessToken();
+      Scribe scribe = getScribe();
+      Request request = new Request(Verb.GET, url);
+      scribe.signRequest(request, aToken);
+      Response resp = request.send();
+      return resp.getBody();
+   }
 
-	public String getHome() throws IOException {
-		return getBody("http://api.twitter.com/1/statuses/user_timeline.xml");
-	}
+   /**
+    * Gets the status of all your friends on twitter
+    * 
+    * @param optIn
+    *           Flag indicating this person has opted in to twitter
+    * @return The body of the response from twitter for all your friends
+    * @throws IOException
+    *            If something goes wrong with the network
+    */
+   public final String getFriends(final boolean optIn) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/statuses/friends_timeline.xml", optIn);
+   }
 
-	private Properties getProperties() throws IOException {
-		String propertiesLocation = System.getProperty("user.home")
-				+ File.separator + ".com262-twitter.properties";
-		File f = new File(propertiesLocation);
-		if (!f.exists())
-			createPropsFile(f);
+   /**
+    * Gets the status of all your personal tweets
+    * 
+    * @param optIn
+    *           Flag indicating this person has opted in to using twitter
+    * @return Twitter response of all your tweets
+    * @throws IOException
+    *            If something goes wrong with the network
+    */
+   public final String getHome(final boolean optIn) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/statuses/user_timeline.xml", optIn);
+   }
 
-		Properties props = new Properties();
-		InputStream fis = new FileInputStream(f);
-		props.loadFromXML(fis);
-		fis.close();
+   /**
+    * Get the properties stored for this used
+    * 
+    * @return A valid Properties mapping for this user
+    * @throws IOException
+    *            If the properties file can't be found or read
+    */
+   private Properties getProperties() throws IOException
+   {
+      String propertiesLocation = System.getProperty("user.home") + File.separator
+            + ".com262-twitter.properties";
+      File f = new File(propertiesLocation);
+      if (!f.exists())
+         createPropsFile(f);
 
-		return props;
-	}
+      Properties props = new Properties();
+      InputStream fis = new FileInputStream(f);
+      props.loadFromXML(fis);
+      fis.close();
 
-	private Scribe getScribe() throws IOException {
-		if (scribeSingleton == null)
-			scribeSingleton = new Scribe(getProperties());
-		return scribeSingleton;
-	}
+      return props;
+   }
 
-	public String getTimelineString() throws IOException {
-		return getBody("http://api.twitter.com/1/statuses/home_timeline.xml");
-	}
+   /**
+    * Helper method to get the scribe singleton
+    * 
+    * @return {@link Scribe} object
+    * @throws IOException
+    *            If something goes wrong with Scribe
+    */
+   private Scribe getScribe() throws IOException
+   {
+      if (scribeSingleton == null)
+         scribeSingleton = new Scribe(getProperties());
+      return scribeSingleton;
+   }
+
+   /**
+    * Get the home timeline response from Twitter
+    * 
+    * @param optIn
+    *           Flag indicating that this user has opted in
+    * @return The XML string of the response from Twitter
+    * @throws IOException
+    *            if something goes wrong with the network
+    */
+   public final String getTimelineString(final boolean optIn) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/statuses/home_timeline.xml", optIn);
+   }
 }
