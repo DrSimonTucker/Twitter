@@ -36,6 +36,9 @@ public class Tweets extends DefaultHandler
    /** Array of tweets to be recorded */
    private final Tweet[] tweetArr;
 
+   /** The multiplier to convert random numbers into time */
+   private static final long RANDOM_MULT = 100000L;
+
    /**
     * Constructor
     * 
@@ -79,6 +82,23 @@ public class Tweets extends DefaultHandler
          }
       else if ((localName + qName).equals("user"))
          inUser = false;
+   }
+
+   /**
+    * External method for filling the tweet array
+    */
+   public final void fill()
+   {
+      // Fill our array with random tweets
+      for (int i = 0; i < tweetArr.length; i++)
+         if (i % 3 == 0)
+            tweetArr[i] = new Tweet("Hello", (long) (Math.random() * RANDOM_MULT), "SimonTucker");
+         else if (i % 3 == 1)
+            tweetArr[i] = new Tweet("RT Retweet example", (long) (Math.random() * RANDOM_MULT),
+                  "SimonTucker");
+         else
+            tweetArr[i] = new Tweet("@SomeoneElse Hello someone else",
+                  (long) (Math.random() * RANDOM_MULT), "SimonTucker");
    }
 
    @Override

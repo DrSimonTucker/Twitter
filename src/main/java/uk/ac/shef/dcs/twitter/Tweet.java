@@ -26,6 +26,23 @@ public class Tweet
    }
 
    /**
+    * Full constructor
+    * 
+    * @param txt
+    *           The text of the tweet
+    * @param tim
+    *           The time of the tweet
+    * @param user
+    *           The user making the tweet
+    */
+   public Tweet(final String txt, final Long tim, final String user)
+   {
+      text = txt;
+      time = tim;
+      username = user;
+   }
+
+   /**
     * Gets the text of the tweet
     * 
     * @return {@link String} text of the tweet

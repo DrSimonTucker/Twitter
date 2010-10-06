@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.shef.dcs.twitter.handlers.Tweets;
-import uk.ac.shef.dcs.twitter.handlers.TwitterUserName;
 
 /**
  * Proxy for accessing twitter
@@ -90,7 +89,7 @@ public final class TwitterProxy
 
       try
       {
-         String xmlString = handler.getFriends(optIn);
+         String xmlString = handler.getHome(optIn);
          parse(xmlString, new Tweets(tweetArr));
       }
       catch (IOException e)
@@ -99,27 +98,6 @@ public final class TwitterProxy
       }
 
       return tweetArr;
-   }
-
-   /**
-    * Gets your twitter username
-    * 
-    * @return a {@link String} of your username
-    */
-   public static String getTwitterUserName()
-   {
-      try
-      {
-         String xmlString = handler.authenticate(optIn);
-         TwitterUserName parsed = (TwitterUserName) parse(xmlString, new TwitterUserName());
-         return parsed.getUserName();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-
-      return "";
    }
 
    /**
@@ -141,23 +119,25 @@ public final class TwitterProxy
     * @throws IOException
     *            If something goes wrong with the network
     */
-   private static DefaultHandler parse(final String str, final DefaultHandler handlerIn)
-         throws IOException
+   private static DefaultHandler parse(final String str, final Tweets handlerIn) throws IOException
    {
-      try
-      {
-         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-         parser.parse(new InputSource(new StringReader(str)), handlerIn);
-      }
-      catch (SAXException e)
-      {
-         throw new IOException(e);
-      }
-      catch (ParserConfigurationException e)
-      {
-         throw new IOException(e);
-      }
-
+      // Check we haven't opted out
+      if (!optIn)
+         handlerIn.fill();
+      else
+         try
+         {
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            parser.parse(new InputSource(new StringReader(str)), handlerIn);
+         }
+         catch (SAXException e)
+         {
+            throw new IOException(e);
+         }
+         catch (ParserConfigurationException e)
+         {
+            throw new IOException(e);
+         }
       return handlerIn;
    }
 
