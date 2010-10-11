@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.shef.dcs.twitter.Tweet;
+import uk.ac.shef.dcs.twitter.TwitterConstructor;
 
 /**
  * XML Handler for tweet streams
@@ -18,8 +19,14 @@ import uk.ac.shef.dcs.twitter.Tweet;
  */
 public class Tweets extends DefaultHandler
 {
-   /** The tweet currently being constructed */
-   private Tweet currTweet = new Tweet();
+   /** The text of the tweet */
+   private String tweetText;
+
+   /** The user creating the tweet */
+   private String user;
+
+   /** The time the tweet was created */
+   private Long time;
 
    /** Date format for parsing date information from the stream */
    private final DateFormat df = new SimpleDateFormat("EEE MMM dd hh:mm:ss ZZZZ yyyy");
@@ -39,15 +46,21 @@ public class Tweets extends DefaultHandler
    /** The multiplier to convert random numbers into time */
    private static final long RANDOM_MULT = 100000L;
 
+   /** The constructor used to generate the tweet */
+   private final TwitterConstructor cons;
+
    /**
     * Constructor
     * 
+    * @param constructor
+    *           A suitable constructor for the tweets
     * @param toFill
     *           The array of tweets we wish to fill
     */
-   public Tweets(final Tweet[] toFill)
+   public Tweets(final Tweet[] toFill, final TwitterConstructor constructor)
    {
       tweetArr = toFill;
+      cons = constructor;
    }
 
    @Override
@@ -64,17 +77,16 @@ public class Tweets extends DefaultHandler
       if ((localName + qName).equals("status"))
       {
          if (pointer < tweetArr.length)
-            tweetArr[pointer++] = currTweet;
-         currTweet = new Tweet();
+            tweetArr[pointer++] = cons.generateTweet(tweetText, user, time);
       }
       else if ((localName + qName).equals("text"))
-         currTweet.setText(text);
+         tweetText = text;
       else if ((localName + qName).equals("screen_name"))
-         currTweet.setUsername(text);
+         user = text;
       else if (!inUser && (localName + qName).equals("created_at"))
          try
          {
-            currTweet.setTime(df.parse(text).getTime());
+            time = (df.parse(text).getTime());
          }
          catch (ParseException e)
          {
@@ -92,13 +104,14 @@ public class Tweets extends DefaultHandler
       // Fill our array with random tweets
       for (int i = 0; i < tweetArr.length; i++)
          if (i % 3 == 0)
-            tweetArr[i] = new Tweet("Hello", (long) (Math.random() * RANDOM_MULT), "SimonTucker");
+            tweetArr[i] = cons.generateTweet("Hello", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
          else if (i % 3 == 1)
-            tweetArr[i] = new Tweet("RT Retweet example", (long) (Math.random() * RANDOM_MULT),
-                  "SimonTucker");
+            tweetArr[i] = cons.generateTweet("RT Retweet example", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
          else
-            tweetArr[i] = new Tweet("@SomeoneElse Hello someone else",
-                  (long) (Math.random() * RANDOM_MULT), "SimonTucker");
+            tweetArr[i] = cons.generateTweet("@SomeoneElse Hello someone else", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
    }
 
    @Override

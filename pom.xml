@@ -3,7 +3,7 @@
   <groupId>uk.ac.shef.dcs</groupId>
   <artifactId>twitter</artifactId>
   <packaging>jar</packaging>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.3</version>
   <name>twitter</name>
   <url>http://maven.apache.org</url>
 

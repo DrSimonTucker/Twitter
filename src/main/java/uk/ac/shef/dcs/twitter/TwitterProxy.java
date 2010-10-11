@@ -31,18 +31,20 @@ public final class TwitterProxy
    /**
     * Get the Tweets from your friends
     * 
+    * @param cons
+    *           A suitable twitter constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of the available tweets
     */
-   public static Tweet[] getFriendsTweets(final int n)
+   public static Tweet[] getFriendsTweets(final int n, final TwitterConstructor cons)
    {
       Tweet[] tweetArr = new Tweet[n];
 
       try
       {
          String xmlString = handler.getFriends(optIn);
-         parse(xmlString, new Tweets(tweetArr));
+         parse(xmlString, new Tweets(tweetArr, cons));
       }
       catch (IOException e)
       {
@@ -55,18 +57,20 @@ public final class TwitterProxy
    /**
     * Get the latest public tweets
     * 
+    * @param cons
+    *           A suitable twitter constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of {@link Tweet}
     */
-   public static Tweet[] getLatestPublicTweets(final int n)
+   public static Tweet[] getLatestPublicTweets(final int n, final TwitterConstructor cons)
    {
       Tweet[] tweetArr = new Tweet[n];
 
       try
       {
          String xmlString = handler.getAll(optIn);
-         parse(xmlString, new Tweets(tweetArr));
+         parse(xmlString, new Tweets(tweetArr, cons));
       }
       catch (IOException e)
       {
@@ -77,20 +81,22 @@ public final class TwitterProxy
    }
 
    /**
-    * Get the latest tweets from your friends
+    * Get your latest Tweets
     * 
+    * @param cons
+    *           A suitable Twitter Constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of {@link Tweet}
     */
-   public static Tweet[] getLatestTweets(final int n)
+   public static Tweet[] getLatestTweets(final int n, final TwitterConstructor cons)
    {
       Tweet[] tweetArr = new Tweet[n];
 
       try
       {
          String xmlString = handler.getHome(optIn);
-         parse(xmlString, new Tweets(tweetArr));
+         parse(xmlString, new Tweets(tweetArr, cons));
       }
       catch (IOException e)
       {

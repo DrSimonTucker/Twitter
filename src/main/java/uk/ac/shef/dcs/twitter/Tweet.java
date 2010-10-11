@@ -6,71 +6,36 @@ package uk.ac.shef.dcs.twitter;
  * @author sat
  * 
  */
-public class Tweet
+public interface Tweet
 {
-   /** The text of the tweet */
-   private String text;
-
-   /** The time of the tweet in long format */
-   private Long time;
-
-   /** The username of the person sending the tweet */
-   private String username;
 
    /**
-    * Default constructor
-    */
-   public Tweet()
-   {
-
-   }
-
-   /**
-    * Full constructor
+    * Gets a String representation of the tweet
     * 
-    * @param txt
-    *           The text of the tweet
-    * @param tim
-    *           The time of the tweet
-    * @param user
-    *           The user making the tweet
+    * @return A String representation of the tweet
     */
-   public Tweet(final String txt, final Long tim, final String user)
-   {
-      text = txt;
-      time = tim;
-      username = user;
-   }
+   String getStringRep();
 
    /**
     * Gets the text of the tweet
     * 
     * @return {@link String} text of the tweet
     */
-   public final String getText()
-   {
-      return text;
-   }
+   String getText();
 
    /**
     * Gets the time of the tweet
     * 
     * @return {@link Long} time of the tweet in seconds since the epoch
     */
-   public final Long getTime()
-   {
-      return time;
-   }
+   Long getTime();
 
    /**
     * Gets the username of the person who sent the tweet
     * 
     * @return {@link String} The name of the user sending the tweet
     */
-   public final String getUsername()
-   {
-      return username;
-   }
+   String getUsername();
 
    /**
     * Sets the text of the tweet
@@ -78,10 +43,7 @@ public class Tweet
     * @param textIn
     *           String text of the tweet
     */
-   public final void setText(final String textIn)
-   {
-      this.text = textIn;
-   }
+   void setText(final String textIn);
 
    /**
     * Sets the time of the tweet
@@ -89,10 +51,7 @@ public class Tweet
     * @param timeIn
     *           The time the tweet was sent (in seconds since the epoch)
     */
-   public final void setTime(final Long timeIn)
-   {
-      this.time = timeIn;
-   }
+   void setTime(final Long timeIn);
 
    /**
     * Sets the username of the tweeter
@@ -100,14 +59,6 @@ public class Tweet
     * @param usernameIn
     *           The name of the tweeter
     */
-   public final void setUsername(final String usernameIn)
-   {
-      this.username = usernameIn;
-   }
+   void setUsername(final String usernameIn);
 
-   @Override
-   public final String toString()
-   {
-      return username + ": " + text + " (" + time + ")";
-   }
 }
