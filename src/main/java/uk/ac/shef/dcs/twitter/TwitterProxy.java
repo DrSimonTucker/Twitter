@@ -11,6 +11,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import uk.ac.shef.dcs.SocialPostConstructor;
 import uk.ac.shef.dcs.twitter.handlers.Tweets;
 
 /**
@@ -37,9 +38,9 @@ public final class TwitterProxy
     *           The number of tweets to collect
     * @return An array of the available tweets
     */
-   public static Tweet[] getFriendsTweets(final int n, final TwitterConstructor cons)
+   public static SocialPost[] getFriendsTweets(final int n, final SocialPostConstructor cons)
    {
-      Tweet[] tweetArr = new Tweet[n];
+      SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {
@@ -61,11 +62,11 @@ public final class TwitterProxy
     *           A suitable twitter constructor
     * @param n
     *           The number of tweets to collect
-    * @return An array of {@link Tweet}
+    * @return An array of {@link SocialPost}
     */
-   public static Tweet[] getLatestPublicTweets(final int n, final TwitterConstructor cons)
+   public static SocialPost[] getLatestPublicTweets(final int n, final SocialPostConstructor cons)
    {
-      Tweet[] tweetArr = new Tweet[n];
+      SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {
@@ -87,11 +88,11 @@ public final class TwitterProxy
     *           A suitable Twitter Constructor
     * @param n
     *           The number of tweets to collect
-    * @return An array of {@link Tweet}
+    * @return An array of {@link SocialPost}
     */
-   public static Tweet[] getLatestTweets(final int n, final TwitterConstructor cons)
+   public static SocialPost[] getLatestTweets(final int n, final SocialPostConstructor cons)
    {
-      Tweet[] tweetArr = new Tweet[n];
+      SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {

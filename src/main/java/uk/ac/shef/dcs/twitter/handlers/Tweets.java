@@ -8,8 +8,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.ac.shef.dcs.twitter.Tweet;
-import uk.ac.shef.dcs.twitter.TwitterConstructor;
+import uk.ac.shef.dcs.SocialPostConstructor;
+import uk.ac.shef.dcs.twitter.SocialPost;
 
 /**
  * XML Handler for tweet streams
@@ -41,13 +41,13 @@ public class Tweets extends DefaultHandler
    private String text = "";
 
    /** Array of tweets to be recorded */
-   private final Tweet[] tweetArr;
+   private final SocialPost[] tweetArr;
 
    /** The multiplier to convert random numbers into time */
    private static final long RANDOM_MULT = 100000L;
 
    /** The constructor used to generate the tweet */
-   private final TwitterConstructor cons;
+   private final SocialPostConstructor cons;
 
    /**
     * Constructor
@@ -57,7 +57,7 @@ public class Tweets extends DefaultHandler
     * @param toFill
     *           The array of tweets we wish to fill
     */
-   public Tweets(final Tweet[] toFill, final TwitterConstructor constructor)
+   public Tweets(final SocialPost[] toFill, final SocialPostConstructor constructor)
    {
       tweetArr = toFill;
       cons = constructor;
