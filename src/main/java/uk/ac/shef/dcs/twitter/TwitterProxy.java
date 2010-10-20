@@ -48,7 +48,7 @@ public class TwitterProxy {
 		Tweet[] tweetArr = new Tweet[n];
 
 		try {
-			String xmlString = handler.getFriends();
+			String xmlString = handler.getHome();
 			parse(xmlString, new Tweets(tweetArr));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -56,7 +56,6 @@ public class TwitterProxy {
 
 		return tweetArr;
 	}
-
 	public static String getTwitterUserName() {
 		try {
 			String xmlString = handler.authenticate();
