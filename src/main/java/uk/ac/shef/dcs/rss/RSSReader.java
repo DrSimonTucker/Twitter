@@ -24,46 +24,6 @@ import com.sun.syndication.io.SyndFeedInput;
 public class RSSReader
 {
    /**
-    * Tester method
-    * 
-    * @param args
-    *           No args needed
-    */
-   public static void main(final String[] args)
-   {
-      RSSReader reader = new RSSReader();
-      reader.buildPosts("http://feeds.bbci.co.uk/news/rss.xml", new SocialPostConstructor()
-      {
-
-         @Override
-         public SocialPost generateFlickr(final String flickrTitle, final String user,
-               final long time)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-
-         @Override
-         public SocialPost generateRSSPost(final String rssText, final String poster,
-               final long postTime)
-         {
-            System.err.println("----");
-            System.err.println(rssText);
-            System.err.println(poster);
-            System.err.println(postTime);
-            return null;
-         }
-
-         @Override
-         public SocialPost generateTweet(final String tweetText, final String user, final long time)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-      });
-   }
-
-   /**
     * Method to build RSS Posts from a feed
     * 
     * @param rssFeedURL
@@ -72,7 +32,8 @@ public class RSSReader
     *           The constructor used to generate the posts
     * @return an array of social posts generated from the given feed
     */
-   public final SocialPost[] buildPosts(final String rssFeedURL, final SocialPostConstructor cons)
+   public static final SocialPost[] buildPosts(int n, final String rssFeedURL,
+         final SocialPostConstructor cons)
    {
       List<SocialPost> allPosts = new LinkedList<SocialPost>();
 
@@ -109,6 +70,45 @@ public class RSSReader
          e.printStackTrace();
       }
 
-      return allPosts.toArray(new SocialPost[0]);
+      return allPosts.subList(0, Math.min(n, allPosts.size() - 1)).toArray(new SocialPost[0]);
+   }
+
+   /**
+    * Tester method
+    * 
+    * @param args
+    *           No args needed
+    */
+   public static void main(final String[] args)
+   {
+      System.out.println(RSSReader.buildPosts(100, "http://feeds.bbci.co.uk/news/rss.xml",
+            new SocialPostConstructor()
+            {
+
+               @Override
+               public SocialPost generateFlickr(final String flickrTitle, final String user,
+                     final long time)
+               {
+                  // TODO Auto-generated method stub
+                  return null;
+               }
+
+               @Override
+               public SocialPost generateRSSPost(final String rssText, final String poster,
+                     final long postTime)
+               {
+
+                  return null;
+               }
+
+               @Override
+               public SocialPost generateTweet(final String tweetText, final String user,
+                     final long time)
+               {
+                  // TODO Auto-generated method stub
+                  return null;
+               }
+            }).length);
+
    }
 }

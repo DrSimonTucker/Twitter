@@ -25,37 +25,6 @@ import com.aetrion.flickr.photos.PhotoList;
  */
 public class FlickrReader
 {
-
-   public static void main(String[] args)
-   {
-      FlickrReader reader = new FlickrReader();
-      for (SocialPost post : reader.readFlickr("number10gov", 10, new SocialPostConstructor()
-      {
-
-         @Override
-         public SocialPost generateFlickr(String flickrTitle, String user, long time)
-         {
-            System.err.println("TITLE = " + flickrTitle + ", USER = " + user + ", TIME = " + time);
-            return null;
-         }
-
-         @Override
-         public SocialPost generateRSSPost(String rssText, String poster, long postTime)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-
-         @Override
-         public SocialPost generateTweet(String tweetText, String user, long time)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-      }))
-         ;
-   }
-
    /**
     * Gets photos from flickr
     * 
@@ -68,7 +37,7 @@ public class FlickrReader
     *           used to construct the posts for these photos
     * @return valid array of Social Posts
     */
-   public final SocialPost[] readFlickr(final String username, final int n,
+   public static SocialPost[] readFlickr(final String username, final int n,
          final SocialPostConstructor cons)
    {
       List<SocialPost> posts = new LinkedList<SocialPost>();
