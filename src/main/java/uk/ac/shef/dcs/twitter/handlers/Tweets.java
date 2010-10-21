@@ -8,56 +8,118 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.ac.shef.dcs.twitter.Tweet;
+import uk.ac.shef.dcs.SocialPostConstructor;
+import uk.ac.shef.dcs.twitter.SocialPost;
 
-public class Tweets extends DefaultHandler {
-	private Tweet currTweet = new Tweet();
+/**
+ * XML Handler for tweet streams
+ * 
+ * @author sat
+ * 
+ */
+public class Tweets extends DefaultHandler
+{
+   /** The text of the tweet */
+   private String tweetText;
 
-	DateFormat df = new SimpleDateFormat("EEE MMM dd hh:mm:ss ZZZZ yyyy");
-	boolean inUser = false;
+   /** The user creating the tweet */
+   private String user;
 
-	private int pointer = 0;
+   /** The time the tweet was created */
+   private Long time;
 
-	private String text = "";
+   /** Date format for parsing date information from the stream */
+   private final DateFormat df = new SimpleDateFormat("EEE MMM dd hh:mm:ss ZZZZ yyyy");
 
-	private final Tweet[] tweetArr;
+   /** Flag to say we're in the user block */
+   private boolean inUser = false;
 
-	public Tweets(Tweet[] toFill) {
-		tweetArr = toFill;
-	}
+   /** Pointer into the tweet array */
+   private int pointer = 0;
 
-	@Override
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
-		text += new String(ch, start, length);
-	}
+   /** Currently read text from the XML stream */
+   private String text = "";
 
-	@Override
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		if ((localName + qName).equals("status")) {
-			if (pointer < tweetArr.length)
-				tweetArr[pointer++] = currTweet;
-			currTweet = new Tweet();
-		} else if ((localName + qName).equals("text"))
-			currTweet.setText(text);
-		else if ((localName + qName).equals("screen_name"))
-			currTweet.setUsername(text);
-		else if (!inUser && (localName + qName).equals("created_at"))
-			try {
-				currTweet.setTime(df.parse(text).getTime());
-			} catch (ParseException e) {
-				throw new SAXException(e);
-			}
-		else if ((localName + qName).equals("user"))
-			inUser = false;
-	}
+   /** Array of tweets to be recorded */
+   private final SocialPost[] tweetArr;
 
-	@Override
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
-		text = "";
-		if ((localName + qName).equals("user"))
-			inUser = true;
-	}
+   /** The multiplier to convert random numbers into time */
+   private static final long RANDOM_MULT = 100000L;
+
+   /** The constructor used to generate the tweet */
+   private final SocialPostConstructor cons;
+
+   /**
+    * Constructor
+    * 
+    * @param constructor
+    *           A suitable constructor for the tweets
+    * @param toFill
+    *           The array of tweets we wish to fill
+    */
+   public Tweets(final SocialPost[] toFill, final SocialPostConstructor constructor)
+   {
+      tweetArr = toFill;
+      cons = constructor;
+   }
+
+   @Override
+   public final void characters(final char[] ch, final int start, final int length)
+         throws SAXException
+   {
+      text += new String(ch, start, length);
+   }
+
+   @Override
+   public final void endElement(final String uri, final String localName, final String qName)
+         throws SAXException
+   {
+      if ((localName + qName).equals("status"))
+      {
+         if (pointer < tweetArr.length)
+            tweetArr[pointer++] = cons.generateTweet(tweetText, user, time);
+      }
+      else if ((localName + qName).equals("text"))
+         tweetText = text;
+      else if ((localName + qName).equals("screen_name"))
+         user = text;
+      else if (!inUser && (localName + qName).equals("created_at"))
+         try
+         {
+            time = (df.parse(text).getTime());
+         }
+         catch (ParseException e)
+         {
+            throw new SAXException(e);
+         }
+      else if ((localName + qName).equals("user"))
+         inUser = false;
+   }
+
+   /**
+    * External method for filling the tweet array
+    */
+   public final void fill()
+   {
+      // Fill our array with random tweets
+      for (int i = 0; i < tweetArr.length; i++)
+         if (i % 3 == 0)
+            tweetArr[i] = cons.generateTweet("Hello", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
+         else if (i % 3 == 1)
+            tweetArr[i] = cons.generateTweet("RT Retweet example", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
+         else
+            tweetArr[i] = cons.generateTweet("@SomeoneElse Hello someone else", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT));
+   }
+
+   @Override
+   public final void startElement(final String uri, final String localName, final String qName,
+         final Attributes attributes) throws SAXException
+   {
+      text = "";
+      if ((localName + qName).equals("user"))
+         inUser = true;
+   }
 }

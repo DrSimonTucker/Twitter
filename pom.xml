@@ -3,7 +3,7 @@
   <groupId>uk.ac.shef.dcs</groupId>
   <artifactId>twitter</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.3</version>
   <name>twitter</name>
   <url>http://maven.apache.org</url>
 
@@ -38,6 +38,18 @@
       <groupId>org.scribe</groupId>
       <artifactId>scribe</artifactId>
       <version>0.6.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.aetrion</groupId>
+      <artifactId>flickr</artifactId>
+      <version>1.2</version>
     </dependency>
 
     <dependency>
