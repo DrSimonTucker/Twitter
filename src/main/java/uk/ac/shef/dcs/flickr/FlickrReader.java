@@ -8,8 +8,7 @@ import java.util.TreeSet;
 
 import org.xml.sax.SAXException;
 
-import uk.ac.shef.dcs.SocialPostConstructor;
-import uk.ac.shef.dcs.twitter.SocialPost;
+import uk.ac.shef.dcs.SocialPost;
 
 import com.aetrion.flickr.Flickr;
 import com.aetrion.flickr.FlickrException;
@@ -23,7 +22,7 @@ import com.aetrion.flickr.photos.PhotoList;
  * @author sat
  * 
  */
-public class FlickrReader
+public final class FlickrReader
 {
    public static void main(String[] args)
    {
@@ -38,12 +37,10 @@ public class FlickrReader
     * 
     * @param n
     *           The number of photos to retrieve (max 500)
-    * @param cons
-    *           used to construct the posts for these photos
+    * 
     * @return valid array of Social Posts
     */
-   public static SocialPost[] readFlickr(final String username, final int n,
-         final SocialPostConstructor cons)
+   public static SocialPost[] readFlickr(final String username, final int n)
    {
       List<SocialPost> posts = new LinkedList<SocialPost>();
 
@@ -65,15 +62,15 @@ public class FlickrReader
             Photo photo = (Photo) photos.get(i);
             if (photo.getDatePosted() != null)
             {
-               SocialPost post = cons.generateFlickr(photo.getTitle(), usr.getUsername(), photo
-                     .getDatePosted().getTime());
+               SocialPost post = new SocialPost(photo.getTitle(), usr.getUsername(), photo
+                     .getDatePosted().getTime(), photo.getSmallSquareUrl());
                posts.add(post);
 
             }
             else
             {
-               SocialPost post = cons.generateFlickr(photo.getTitle(), photo.getOwner()
-                     .getUsername(), System.currentTimeMillis());
+               SocialPost post = new SocialPost(photo.getTitle(), photo.getOwner().getUsername(),
+                     System.currentTimeMillis(), photo.getSmallSquareUrl());
                posts.add(post);
 
             }
@@ -93,5 +90,13 @@ public class FlickrReader
       }
 
       return posts.toArray(new SocialPost[0]);
+   }
+
+   /**
+    * Blocking constructor
+    */
+   private FlickrReader()
+   {
+
    }
 }
