@@ -25,6 +25,11 @@ import com.aetrion.flickr.photos.PhotoList;
  */
 public class FlickrReader
 {
+   public static void main(String[] args)
+   {
+      FlickrReader.readFlickr("shefcompsci", 10);
+   }
+
    /**
     * Gets photos from flickr
     * 
@@ -54,6 +59,7 @@ public class FlickrReader
          extras.add("date_upload");
 
          PhotoList photos = flickr.getPeopleInterface().getPublicPhotos(usr.getId(), extras, n, 1);
+         System.err.println(photos.size());
          for (int i = 0; i < photos.getPerPage(); i++)
          {
             Photo photo = (Photo) photos.get(i);
