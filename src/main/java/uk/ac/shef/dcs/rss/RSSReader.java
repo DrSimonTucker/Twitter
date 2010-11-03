@@ -7,8 +7,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import uk.ac.shef.dcs.SocialPostConstructor;
-import uk.ac.shef.dcs.twitter.SocialPost;
+import uk.ac.shef.dcs.SocialPost;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -21,19 +20,18 @@ import com.sun.syndication.io.SyndFeedInput;
  * @author sat
  * 
  */
-public class RSSReader
+public final class RSSReader
 {
    /**
     * Method to build RSS Posts from a feed
     * 
     * @param rssFeedURL
     *           The name of the feed
-    * @param cons
-    *           The constructor used to generate the posts
+    * @param n
+    *           THe number of items to retrieve
     * @return an array of social posts generated from the given feed
     */
-   public static final SocialPost[] buildPosts(int n, final String rssFeedURL,
-         final SocialPostConstructor cons)
+   public static SocialPost[] buildPosts(final int n, final String rssFeedURL)
    {
       List<SocialPost> allPosts = new LinkedList<SocialPost>();
 
@@ -54,7 +52,7 @@ public class RSSReader
                author = feed.getTitle();
             long date = entry.getPublishedDate().getTime();
 
-            allPosts.add(cons.generateRSSPost(text, author, date));
+            allPosts.add(new SocialPost(text, author, date, ""));
          }
       }
       catch (MalformedURLException e)
@@ -74,41 +72,11 @@ public class RSSReader
    }
 
    /**
-    * Tester method
-    * 
-    * @param args
-    *           No args needed
+    * Blocking Constructor
     */
-   public static void main(final String[] args)
+   private RSSReader()
    {
-      System.out.println(RSSReader.buildPosts(100, "http://feeds.bbci.co.uk/news/rss.xml",
-            new SocialPostConstructor()
-            {
-
-               @Override
-               public SocialPost generateFlickr(final String flickrTitle, final String user,
-                     final long time)
-               {
-                  // TODO Auto-generated method stub
-                  return null;
-               }
-
-               @Override
-               public SocialPost generateRSSPost(final String rssText, final String poster,
-                     final long postTime)
-               {
-
-                  return null;
-               }
-
-               @Override
-               public SocialPost generateTweet(final String tweetText, final String user,
-                     final long time)
-               {
-                  // TODO Auto-generated method stub
-                  return null;
-               }
-            }).length);
 
    }
+
 }

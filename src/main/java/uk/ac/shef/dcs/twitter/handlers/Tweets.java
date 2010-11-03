@@ -8,8 +8,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.ac.shef.dcs.SocialPostConstructor;
-import uk.ac.shef.dcs.twitter.SocialPost;
+import uk.ac.shef.dcs.SocialPost;
 
 /**
  * XML Handler for tweet streams
@@ -24,6 +23,9 @@ public class Tweets extends DefaultHandler
 
    /** The user creating the tweet */
    private String user;
+
+   /** The URL of the tweet */
+   private String imageURL;
 
    /** The time the tweet was created */
    private Long time;
@@ -46,21 +48,15 @@ public class Tweets extends DefaultHandler
    /** The multiplier to convert random numbers into time */
    private static final long RANDOM_MULT = 100000L;
 
-   /** The constructor used to generate the tweet */
-   private final SocialPostConstructor cons;
-
    /**
     * Constructor
     * 
-    * @param constructor
-    *           A suitable constructor for the tweets
     * @param toFill
     *           The array of tweets we wish to fill
     */
-   public Tweets(final SocialPost[] toFill, final SocialPostConstructor constructor)
+   public Tweets(final SocialPost[] toFill)
    {
       tweetArr = toFill;
-      cons = constructor;
    }
 
    @Override
@@ -77,7 +73,7 @@ public class Tweets extends DefaultHandler
       if ((localName + qName).equals("status"))
       {
          if (pointer < tweetArr.length)
-            tweetArr[pointer++] = cons.generateTweet(tweetText, user, time);
+            tweetArr[pointer++] = new SocialPost(tweetText, user, time, imageURL);
       }
       else if ((localName + qName).equals("text"))
          tweetText = text;
@@ -92,6 +88,8 @@ public class Tweets extends DefaultHandler
          {
             throw new SAXException(e);
          }
+      else if (inUser && (localName + qName).equals("profile_image_url"))
+         imageURL = text;
       else if ((localName + qName).equals("user"))
          inUser = false;
    }
@@ -104,14 +102,14 @@ public class Tweets extends DefaultHandler
       // Fill our array with random tweets
       for (int i = 0; i < tweetArr.length; i++)
          if (i % 3 == 0)
-            tweetArr[i] = cons.generateTweet("Hello", "SimonTucker",
-                  (long) (Math.random() * RANDOM_MULT));
+            tweetArr[i] = new SocialPost("Hello", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT), "");
          else if (i % 3 == 1)
-            tweetArr[i] = cons.generateTweet("RT Retweet example", "SimonTucker",
-                  (long) (Math.random() * RANDOM_MULT));
+            tweetArr[i] = new SocialPost("RT Retweet example", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT), "");
          else
-            tweetArr[i] = cons.generateTweet("@SomeoneElse Hello someone else", "SimonTucker",
-                  (long) (Math.random() * RANDOM_MULT));
+            tweetArr[i] = new SocialPost("@SomeoneElse Hello someone else", "SimonTucker",
+                  (long) (Math.random() * RANDOM_MULT), "");
    }
 
    @Override

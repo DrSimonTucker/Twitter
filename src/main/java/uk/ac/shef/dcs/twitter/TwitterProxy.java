@@ -11,7 +11,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.ac.shef.dcs.SocialPostConstructor;
+import uk.ac.shef.dcs.SocialPost;
 import uk.ac.shef.dcs.twitter.handlers.Tweets;
 
 /**
@@ -32,20 +32,18 @@ public final class TwitterProxy
    /**
     * Get the Tweets from your friends
     * 
-    * @param cons
-    *           A suitable twitter constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of the available tweets
     */
-   public static SocialPost[] getFriendsTweets(final int n, final SocialPostConstructor cons)
+   public static SocialPost[] getFriendsTweets(final int n)
    {
       SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {
          String xmlString = handler.getFriends(optIn);
-         parse(xmlString, new Tweets(tweetArr, cons));
+         parse(xmlString, new Tweets(tweetArr));
       }
       catch (IOException e)
       {
@@ -58,20 +56,18 @@ public final class TwitterProxy
    /**
     * Get the latest public tweets
     * 
-    * @param cons
-    *           A suitable twitter constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of {@link SocialPost}
     */
-   public static SocialPost[] getLatestPublicTweets(final int n, final SocialPostConstructor cons)
+   public static SocialPost[] getLatestPublicTweets(final int n)
    {
       SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {
          String xmlString = handler.getAll(optIn);
-         parse(xmlString, new Tweets(tweetArr, cons));
+         parse(xmlString, new Tweets(tweetArr));
       }
       catch (IOException e)
       {
@@ -84,20 +80,18 @@ public final class TwitterProxy
    /**
     * Get your latest Tweets
     * 
-    * @param cons
-    *           A suitable Twitter Constructor
     * @param n
     *           The number of tweets to collect
     * @return An array of {@link SocialPost}
     */
-   public static SocialPost[] getLatestTweets(final int n, final SocialPostConstructor cons)
+   public static SocialPost[] getLatestTweets(final int n)
    {
       SocialPost[] tweetArr = new SocialPost[n];
 
       try
       {
          String xmlString = handler.getHome(optIn);
-         parse(xmlString, new Tweets(tweetArr, cons));
+         parse(xmlString, new Tweets(tweetArr));
       }
       catch (IOException e)
       {
