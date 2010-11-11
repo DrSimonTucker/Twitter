@@ -14,11 +14,18 @@ import javax.swing.JPanel;
  */
 public class ImagePanel extends JPanel
 {
+   /** This image shown in this panel */
    private final Image img;
 
-   public ImagePanel(Image img)
+   /**
+    * Constructor
+    * 
+    * @param imgIn
+    *           The image to display
+    */
+   public ImagePanel(final Image imgIn)
    {
-      this.img = img;
+      this.img = imgIn;
    }
 
    @Override

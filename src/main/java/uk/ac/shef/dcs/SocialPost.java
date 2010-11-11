@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 public class SocialPost
 {
    /** Date and time formatter */
-   private static DateFormat df = DateFormat.getDateTimeInstance();
+   private final DateFormat df = DateFormat.getDateTimeInstance();
 
    /** An image avatar */
    private Image avatar;
@@ -59,7 +59,12 @@ public class SocialPost
       }
    }
 
-   public Image getAvatar()
+   /**
+    * Gets the avatar for the post
+    * 
+    * @return a suitable image
+    */
+   public final Image getAvatar()
    {
       return avatar;
    }
@@ -94,9 +99,15 @@ public class SocialPost
       return username;
    }
 
-   public void setAvatar(Image avatar)
+   /**
+    * Sets the avatar
+    * 
+    * @param avatarIn
+    *           An image for this avatar
+    */
+   public final void setAvatar(final Image avatarIn)
    {
-      this.avatar = avatar;
+      this.avatar = avatarIn;
    }
 
    /**
@@ -133,7 +144,7 @@ public class SocialPost
    }
 
    @Override
-   public String toString()
+   public final String toString()
    {
       return username + ": " + text;
    }
