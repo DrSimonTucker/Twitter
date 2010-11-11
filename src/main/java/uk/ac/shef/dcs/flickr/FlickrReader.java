@@ -56,7 +56,6 @@ public final class FlickrReader
          extras.add("date_upload");
 
          PhotoList photos = flickr.getPeopleInterface().getPublicPhotos(usr.getId(), extras, n, 1);
-         System.err.println(photos.size());
          for (int i = 0; i < photos.getPerPage(); i++)
          {
             Photo photo = (Photo) photos.get(i);

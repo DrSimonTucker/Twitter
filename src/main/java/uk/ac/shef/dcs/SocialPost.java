@@ -15,20 +15,20 @@ import javax.imageio.ImageIO;
  */
 public class SocialPost
 {
-   /** The text of the post */
-   private String text;
-
-   /** The username of the creator of the post */
-   private String username;
-
-   /** The time the post was made */
-   private Long time;
+   /** Date and time formatter */
+   private static DateFormat df = DateFormat.getDateTimeInstance();
 
    /** An image avatar */
    private Image avatar;
 
-   /** Date and time formatter */
-   private static DateFormat df = DateFormat.getDateTimeInstance();
+   /** The text of the post */
+   private String text;
+
+   /** The time the post was made */
+   private Long time;
+
+   /** The username of the creator of the post */
+   private String username;
 
    /**
     * Constructor
@@ -130,6 +130,12 @@ public class SocialPost
    public final void setUsername(final String usernameIn)
    {
       username = usernameIn;
+   }
+
+   @Override
+   public String toString()
+   {
+      return username + ": " + text;
    }
 
 }

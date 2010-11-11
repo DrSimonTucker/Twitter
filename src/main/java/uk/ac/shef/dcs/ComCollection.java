@@ -18,13 +18,11 @@ public interface ComCollection<X>
    void add(X object);
 
    /**
-    * Removes an object from the collection
+    * Gets an iterator to the collection
     * 
-    * @return An object from the collection
-    * @throws CollectionEmptyException
-    *            if the collection is already empty
+    * @return A Suitable iterator for this collection
     */
-   X remove() throws CollectionEmptyException;
+   Iterator<X> getIterator();
 
    /**
     * Get the size of the collection

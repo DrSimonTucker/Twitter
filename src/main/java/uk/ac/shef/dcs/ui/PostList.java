@@ -10,16 +10,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-import uk.ac.shef.dcs.CollectionEmptyException;
 import uk.ac.shef.dcs.ComCollection;
+import uk.ac.shef.dcs.Iterator;
 import uk.ac.shef.dcs.SocialPost;
+import uk.ac.shef.dcs.Visitor;
 
 public class PostList extends JPanel implements ListCellRenderer
 {
 
-   List<SocialPost> posts = new LinkedList<SocialPost>();
-
    DefaultListModel model = new DefaultListModel();
+
+   List<SocialPost> posts = new LinkedList<SocialPost>();
 
    public PostList()
    {
@@ -28,15 +29,15 @@ public class PostList extends JPanel implements ListCellRenderer
 
    public void addPost(ComCollection<SocialPost> post)
    {
-      try
+      Iterator<SocialPost> iterator = post.getIterator();
+      iterator.process(new Visitor<SocialPost>()
       {
-         while (post.size() > 0)
-            model.addElement(post.remove());
-      }
-      catch (CollectionEmptyException e)
-      {
-         e.printStackTrace();
-      }
+         @Override
+         public void visit(SocialPost object)
+         {
+            model.addElement(object);
+         }
+      });
    }
 
    @Override
