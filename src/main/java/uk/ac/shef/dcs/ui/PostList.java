@@ -11,7 +11,6 @@ import javax.swing.ListCellRenderer;
 import uk.ac.shef.dcs.ComCollection;
 import uk.ac.shef.dcs.Iterator;
 import uk.ac.shef.dcs.SocialPost;
-import uk.ac.shef.dcs.Visitor;
 
 /**
  * A JPanel containing a list of posts
@@ -42,14 +41,13 @@ public class PostList extends JPanel implements ListCellRenderer
    public final void addPost(final ComCollection<SocialPost> posts)
    {
       Iterator<SocialPost> iterator = posts.getIterator();
-      iterator.process(new Visitor<SocialPost>()
-      {
-         @Override
-         public void visit(final SocialPost object)
-         {
-            model.addElement(object);
-         }
-      });
+      while (iterator.hasNext())
+         model.addElement(iterator.getNext());
+   }
+
+   public void addSinglePost(SocialPost post)
+   {
+      model.addElement(post);
    }
 
    @Override

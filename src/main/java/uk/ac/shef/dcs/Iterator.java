@@ -9,11 +9,7 @@ package uk.ac.shef.dcs;
  */
 public interface Iterator<X>
 {
-   /**
-    * Processes a collection using the suppled visitor function
-    * 
-    * @param visitor
-    *           A suitable visitor function
-    */
-   void process(Visitor<X> visitor);
+   X getNext();
+
+   boolean hasNext();
 }
