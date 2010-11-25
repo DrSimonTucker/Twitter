@@ -45,7 +45,13 @@ public class PostList extends JPanel implements ListCellRenderer
          model.addElement(iterator.getNext());
    }
 
-   public void addSinglePost(SocialPost post)
+   /**
+    * Adds a a single post to the panel list
+    * 
+    * @param post
+    *           The post to be added to the list
+    */
+   public final void addSinglePost(final SocialPost post)
    {
       model.addElement(post);
    }
