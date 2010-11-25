@@ -13,8 +13,21 @@ import javax.imageio.ImageIO;
  * @author sat
  * 
  */
-public class SocialPost
+public class SocialPost implements Comparable<SocialPost>
 {
+   public static void main(String[] args)
+   {
+      SocialPost post1 = new SocialPost("hello", "user", 123L,
+            "http://staffwww.dcs.shef.ac.uk/people/S.Tucker/images/face.png");
+      SocialPost post2 = new SocialPost("hello", "user", 123L,
+            "http://staffwww.dcs.shef.ac.uk/people/S.Tucker/images/face.png");
+
+      System.out.println(post1.hashCode());
+      System.out.println(post2.hashCode());
+      System.out.println(post1.getText().hashCode());
+      System.out.println(post2.getText().hashCode());
+   }
+
    /** Date and time formatter */
    private final DateFormat df = DateFormat.getDateTimeInstance();
 
@@ -57,6 +70,12 @@ public class SocialPost
       {
          e.printStackTrace();
       }
+   }
+
+   @Override
+   public final int compareTo(final SocialPost arg0)
+   {
+      return time.compareTo(arg0.time);
    }
 
    /**

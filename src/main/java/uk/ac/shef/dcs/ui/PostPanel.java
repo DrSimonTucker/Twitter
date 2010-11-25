@@ -10,17 +10,33 @@ import javax.swing.JTextArea;
 
 import uk.ac.shef.dcs.SocialPost;
 
+/**
+ * A JPanel containing a single post
+ * 
+ * @author sat
+ * 
+ */
 public class PostPanel extends JPanel
 {
 
+   /** The post to be display */
    private final SocialPost post;
 
-   public PostPanel(SocialPost displayPost)
+   /**
+    * Constructor
+    * 
+    * @param displayPost
+    *           The post this panel should display
+    */
+   public PostPanel(final SocialPost displayPost)
    {
       post = displayPost;
       initPanel();
    }
 
+   /**
+    * Prepare the panel for use
+    */
    private void initPanel()
    {
       this.setLayout(new BorderLayout());

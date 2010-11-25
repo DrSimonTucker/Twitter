@@ -24,10 +24,6 @@ import com.aetrion.flickr.photos.PhotoList;
  */
 public final class FlickrReader
 {
-   public static void main(String[] args)
-   {
-      FlickrReader.readFlickr("shefcompsci", 10);
-   }
 
    /**
     * Gets photos from flickr

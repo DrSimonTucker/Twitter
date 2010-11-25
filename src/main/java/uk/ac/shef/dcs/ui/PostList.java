@@ -1,8 +1,6 @@
 package uk.ac.shef.dcs.ui;
 
 import java.awt.Component;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -15,25 +13,39 @@ import uk.ac.shef.dcs.Iterator;
 import uk.ac.shef.dcs.SocialPost;
 import uk.ac.shef.dcs.Visitor;
 
+/**
+ * A JPanel containing a list of posts
+ * 
+ * @author sat
+ * 
+ */
 public class PostList extends JPanel implements ListCellRenderer
 {
 
-   DefaultListModel model = new DefaultListModel();
+   /** List model to be used */
+   private final DefaultListModel model = new DefaultListModel();
 
-   List<SocialPost> posts = new LinkedList<SocialPost>();
-
+   /**
+    * Constructor
+    */
    public PostList()
    {
       initList();
    }
 
-   public void addPost(ComCollection<SocialPost> post)
+   /**
+    * Adds a collection of post to the display
+    * 
+    * @param posts
+    *           the collection of posts to be added
+    */
+   public final void addPost(final ComCollection<SocialPost> posts)
    {
-      Iterator<SocialPost> iterator = post.getIterator();
+      Iterator<SocialPost> iterator = posts.getIterator();
       iterator.process(new Visitor<SocialPost>()
       {
          @Override
-         public void visit(SocialPost object)
+         public void visit(final SocialPost object)
          {
             model.addElement(object);
          }
@@ -41,12 +53,15 @@ public class PostList extends JPanel implements ListCellRenderer
    }
 
    @Override
-   public Component getListCellRendererComponent(JList list, Object value, int index,
-         boolean isSelected, boolean cellHasFocus)
+   public final Component getListCellRendererComponent(final JList list, final Object value,
+         final int index, final boolean isSelected, final boolean cellHasFocus)
    {
       return new PostPanel((SocialPost) value);
    }
 
+   /**
+    * Initialise the list
+    */
    private void initList()
    {
       JList list = new JList(model);
