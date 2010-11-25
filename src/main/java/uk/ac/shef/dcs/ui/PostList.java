@@ -13,7 +13,6 @@ import javax.swing.ListCellRenderer;
 import uk.ac.shef.dcs.ComCollection;
 import uk.ac.shef.dcs.Iterator;
 import uk.ac.shef.dcs.SocialPost;
-import uk.ac.shef.dcs.Visitor;
 
 public class PostList extends JPanel implements ListCellRenderer
 {
@@ -30,14 +29,13 @@ public class PostList extends JPanel implements ListCellRenderer
    public void addPost(ComCollection<SocialPost> post)
    {
       Iterator<SocialPost> iterator = post.getIterator();
-      iterator.process(new Visitor<SocialPost>()
-      {
-         @Override
-         public void visit(SocialPost object)
-         {
-            model.addElement(object);
-         }
-      });
+      while(iterator.hasNext())
+    	  model.addElement(iterator.getNext());
+   }
+   
+   public void addSinglePost(SocialPost post)
+   {
+      model.addElement(post);
    }
 
    @Override
