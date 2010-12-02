@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.flickr;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,14 @@ import com.aetrion.flickr.photos.PhotoList;
  */
 public final class FlickrReader
 {
+
+   /**
+    * Blocking constructor
+    */
+   private FlickrReader()
+   {
+
+   }
 
    /**
     * Gets photos from flickr
@@ -84,14 +93,7 @@ public final class FlickrReader
          e.printStackTrace();
       }
 
+      Collections.shuffle(posts);
       return posts.toArray(new SocialPost[0]);
-   }
-
-   /**
-    * Blocking constructor
-    */
-   private FlickrReader()
-   {
-
    }
 }

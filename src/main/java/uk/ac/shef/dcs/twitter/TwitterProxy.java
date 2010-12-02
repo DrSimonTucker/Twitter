@@ -2,6 +2,9 @@ package uk.ac.shef.dcs.twitter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -28,6 +31,14 @@ public final class TwitterProxy
 
    /** Flag to indicate we have opted in to twitter */
    private static boolean optIn = true;
+
+   /**
+    * Blocking constructor
+    */
+   private TwitterProxy()
+   {
+
+   }
 
    /**
     * Get the Tweets from your friends
@@ -98,7 +109,13 @@ public final class TwitterProxy
          e.printStackTrace();
       }
 
-      return tweetArr;
+      List<SocialPost> posts = new LinkedList<SocialPost>();
+      for (int i = 0; i < tweetArr.length; i++)
+         if (tweetArr[i] != null)
+            posts.add(tweetArr[i]);
+      Collections.shuffle(posts);
+
+      return posts.toArray(new SocialPost[0]);
    }
 
    /**
@@ -140,13 +157,5 @@ public final class TwitterProxy
             throw new IOException(e);
          }
       return handlerIn;
-   }
-
-   /**
-    * Blocking constructor
-    */
-   private TwitterProxy()
-   {
-
    }
 }
