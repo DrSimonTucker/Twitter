@@ -32,6 +32,20 @@ public class OAuthHandler
    private static Scribe scribeSingleton;
 
    /**
+    * Tester method
+    * 
+    * @param args
+    *           Command line arguments
+    * @throws Exception
+    *            If something goes wrong
+    */
+   public static void main(final String[] args) throws Exception
+   {
+      OAuthHandler handler = new OAuthHandler();
+      System.out.println(handler.getList("guardian", "music-staff", true));
+   }
+
+   /**
     * Authenticates the user
     * 
     * @param optIn
@@ -88,7 +102,6 @@ public class OAuthHandler
             + ".com262token");
 
       if (!accessTokenFile.exists())
-      {
          try
          {
             Scribe scribe = getScribe();
@@ -111,7 +124,6 @@ public class OAuthHandler
          {
             e.printStackTrace();
          }
-      }
 
       try
       {
@@ -193,6 +205,12 @@ public class OAuthHandler
    public final String getHome(final boolean optIn) throws IOException
    {
       return getBody("http://api.twitter.com/1/statuses/user_timeline.xml", optIn);
+   }
+
+   public final String getList(String name, String list, boolean optIn) throws IOException
+   {
+      return getBody("https://api.twitter.com/1/lists/statuses.xml?owner_screen_name=" + name
+            + "&slug=" + list, optIn);
    }
 
    /**

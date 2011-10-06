@@ -32,12 +32,26 @@ public final class TwitterProxy
    /** Flag to indicate we have opted in to twitter */
    private static boolean optIn = true;
 
-   /**
-    * Blocking constructor
-    */
-   private TwitterProxy()
-   {
+   private static final int NUMBER_OF_POSTS = 1000;
 
+   public static SocialPost[] getFeedList(String provider, String list)
+   {
+      SocialPost[] tweetArr = new SocialPost[NUMBER_OF_POSTS];
+      try
+      {
+         String xmlString = handler.getList(provider, list, optIn);
+         parse(xmlString, new Tweets(tweetArr));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+      for (SocialPost post : tweetArr)
+         if (post != null)
+            post.setSource(list);
+
+      return tweetArr;
    }
 
    /**
@@ -157,5 +171,13 @@ public final class TwitterProxy
             throw new IOException(e);
          }
       return handlerIn;
+   }
+
+   /**
+    * Blocking constructor
+    */
+   private TwitterProxy()
+   {
+
    }
 }

@@ -7,3 +7,4 @@ target
 .checkstyle
 install.sh
 sync.sh
+*.data

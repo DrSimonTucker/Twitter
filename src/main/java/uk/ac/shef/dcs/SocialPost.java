@@ -30,6 +30,11 @@ public class SocialPost implements Comparable<SocialPost>
    /** The username of the creator of the post */
    private String username;
 
+   /** The source from which the post came */
+   private String source = "random";
+
+   private static final int SCALE_SIZE = 48;
+
    /**
     * Constructor
     * 
@@ -51,7 +56,7 @@ public class SocialPost implements Comparable<SocialPost>
       try
       {
          Image avatarLarge = ImageIO.read(new URL(avatrURL));
-         avatar = avatarLarge.getScaledInstance(48, -1, Image.SCALE_FAST);
+         avatar = avatarLarge.getScaledInstance(SCALE_SIZE, -1, Image.SCALE_FAST);
       }
       catch (IOException e)
       {
@@ -73,6 +78,11 @@ public class SocialPost implements Comparable<SocialPost>
    public final Image getAvatar()
    {
       return avatar;
+   }
+
+   public final String getSource()
+   {
+      return source;
    }
 
    /**
@@ -114,6 +124,11 @@ public class SocialPost implements Comparable<SocialPost>
    public final void setAvatar(final Image avatarIn)
    {
       this.avatar = avatarIn;
+   }
+
+   public final void setSource(String in)
+   {
+      source = in;
    }
 
    /**
