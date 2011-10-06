@@ -18,11 +18,17 @@ public class Runner
          Runner mine = new Runner();
          mine.collectWeek1Data(f);
       }
+      if (args[0].equals("week2data"))
+      {
+         File f = new File("week2.data");
+         Runner mine = new Runner();
+         mine.collectWeek2Data(f);
+      }
       else if (args[0].equals("week1run"))
          Week1Framework.runWeek1(args[1]);
    }
 
-   public final void collectWeek2
+   
 
    public final void collectWeek1Data(final File outFile) throws IOException
    {
@@ -37,17 +43,23 @@ public class Runner
             ps.println(post.getSource() + ":::" + post.getUsername() + ":::" + post.getText());
 
       ps.close();
-   }  Data(final File outFile) throws IOException
+   }  
+   
+   public final void collectWeek2Data(final File outFile) throws IOException
    {
       PrintStream ps = new PrintStream(outFile);
       SocialPost[] arr = TwitterProxy.getFeedList("guardian", "film-staff");
       for (SocialPost post : arr)
          if (post != null)
-            ps.println(post.getSource() + ":::" + post.getUsername() + ":::" + post.getText());
+            ps.println("FB:::" + post.getUsername() + ":::" + post.getText());
       arr = TwitterProxy.getFeedList("guardian", "music-staff");
       for (SocialPost post : arr)
          if (post != null)
-            ps.println(post.getSource() + ":::" + post.getUsername() + ":::" + post.getText());
+            ps.println("TW:::" + post.getUsername() + ":::" + post.getSource() + ":::" + post.getText());
+      arr = TwitterProxy.getFeedList("guardian", "books-staff");
+      for (SocialPost post : arr)
+         if (post != null)
+            ps.println("GP:::" + post.getUsername() + ":::" + post.getSource() + ":::" + post.getText());
 
       ps.close();
    }
