@@ -39,8 +39,34 @@ public final class TwitterProxy
       SocialPost[] tweetArr = new SocialPost[NUMBER_OF_POSTS];
       try
       {
-         String xmlString = handler.getList(provider, list, optIn);
+         String xmlString = handler.getList(provider, list, optIn, 10);
          parse(xmlString, new Tweets(tweetArr));
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+      for (SocialPost post : tweetArr)
+         if (post != null)
+            post.setSource(list);
+
+      return tweetArr;
+   }
+
+   public static SocialPost[] getFeedList(String provider, String list, int numberOfPosts)
+   {
+      SocialPost[] tweetArr = new SocialPost[numberOfPosts];
+      try
+      {
+         int page = 1;
+         System.out.println("Filling " + tweetArr.length + " tweets");
+         while (tweetArr[tweetArr.length - 1] == null)
+         {
+            System.out.println("Processing page " + page);
+            String xmlString = handler.getList(provider, list, optIn, page++);
+            parse(xmlString, new Tweets(tweetArr));
+         }
       }
       catch (IOException e)
       {

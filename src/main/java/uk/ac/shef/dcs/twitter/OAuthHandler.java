@@ -42,7 +42,7 @@ public class OAuthHandler
    public static void main(final String[] args) throws Exception
    {
       OAuthHandler handler = new OAuthHandler();
-      System.out.println(handler.getList("guardian", "music-staff", true));
+      System.out.println(handler.getList("guardian", "music-staff", true, 1));
    }
 
    /**
@@ -167,6 +167,8 @@ public class OAuthHandler
     */
    private String getBody(final String url, final boolean optIn) throws IOException
    {
+      System.out.println("Processing: " + url);
+
       // Deal with people that have opted out
       if (!optIn)
          return "";
@@ -207,10 +209,11 @@ public class OAuthHandler
       return getBody("http://api.twitter.com/1/statuses/user_timeline.xml", optIn);
    }
 
-   public final String getList(String name, String list, boolean optIn) throws IOException
+   public final String getList(String name, String list, boolean optIn, int page)
+         throws IOException
    {
-      return getBody("https://api.twitter.com/1/lists/statuses.xml?owner_screen_name=" + name
-            + "&slug=" + list, optIn);
+      return getBody("https://api.twitter.com/1/lists/statuses.xml?per_page=200&owner_screen_name="
+            + name + "&slug=" + list + "&page=" + page, optIn);
    }
 
    /**

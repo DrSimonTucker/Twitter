@@ -57,6 +57,10 @@ public class Tweets extends DefaultHandler
    public Tweets(final SocialPost[] toFill)
    {
       tweetArr = toFill;
+
+      // Adjust the pointer to the first non-null entry
+      while (toFill[pointer] != null)
+         pointer++;
    }
 
    @Override
