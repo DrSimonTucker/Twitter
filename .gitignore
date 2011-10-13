@@ -8,3 +8,4 @@ target
 install.sh
 sync.sh
 *.data
+data.zip
