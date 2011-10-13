@@ -65,6 +65,7 @@ public final class TwitterProxy
          {
             System.out.println("Processing page " + page);
             String xmlString = handler.getList(provider, list, optIn, page++);
+            System.out.println(xmlString);
             parse(xmlString, new Tweets(tweetArr));
          }
       }

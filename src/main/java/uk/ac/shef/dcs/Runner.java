@@ -37,16 +37,16 @@ public class Runner
    public final void collectAssignmentData(final File outFile) throws IOException
    {
       PrintStream ps = new PrintStream(outFile);
-      SocialPost[] arr = TwitterProxy.getFeedList("guardian", "film-staff", 4000);
+      SocialPost[] arr = TwitterProxy.getFeedList("guardian", "film-staff", 400);
       for (SocialPost post : arr)
          if (post != null)
             ps.println("FB:::" + post.getUsername() + ":::" + post.getText());
-      arr = TwitterProxy.getFeedList("guardian", "music-staff", 4000);
+      arr = TwitterProxy.getFeedList("guardian", "music-staff", 400);
       for (SocialPost post : arr)
          if (post != null)
             ps.println("TW:::" + post.getUsername() + ":::" + post.getSource() + ":::"
                   + post.getText());
-      arr = TwitterProxy.getFeedList("guardian", "books-staff", 4000);
+      arr = TwitterProxy.getFeedList("guardian", "books-staff", 400);
       for (SocialPost post : arr)
          if (post != null)
             ps.println("GP:::" + post.getUsername() + ":::" + post.getSource() + ":::"
