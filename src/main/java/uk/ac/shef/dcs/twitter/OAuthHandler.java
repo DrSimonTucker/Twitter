@@ -173,12 +173,21 @@ public class OAuthHandler
       if (!optIn)
          return "";
 
-      Token aToken = getAccessToken();
-      Scribe scribe = getScribe();
-      Request request = new Request(Verb.GET, url);
-      scribe.signRequest(request, aToken);
-      Response resp = request.send();
-      return resp.getBody();
+      try
+      {
+         Token aToken = getAccessToken();
+         Scribe scribe = getScribe();
+         Request request = new Request(Verb.GET, url);
+         scribe.signRequest(request, aToken);
+         Response resp = request.send();
+         return resp.getBody();
+      }
+      catch (RuntimeException e)
+      {
+         // Ignore
+      }
+
+      return "";
    }
 
    /**
@@ -212,8 +221,15 @@ public class OAuthHandler
    public final String getList(String name, String list, boolean optIn, int page)
          throws IOException
    {
-      return getBody("https://api.twitter.com/1/lists/statuses.xml?per_page=200&owner_screen_name="
+      return getBody("https://api.twitter.com/1/lists/statuses.xml?per_page=50&owner_screen_name="
             + name + "&slug=" + list + "&page=" + page, optIn);
+   }
+
+   public final String getPosts(String name, int page) throws IOException
+   {
+      return getBody(
+            "https://api.twitter.com/1/statuses/user_timeline.xml?per_page=50&screen_name=" + name
+                  + "&page=" + page, true);
    }
 
    /**

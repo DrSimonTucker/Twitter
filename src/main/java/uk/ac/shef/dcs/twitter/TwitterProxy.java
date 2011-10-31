@@ -63,9 +63,9 @@ public final class TwitterProxy
          System.out.println("Filling " + tweetArr.length + " tweets");
          while (tweetArr[tweetArr.length - 1] == null)
          {
-            System.out.println("Processing page " + page);
+            // System.out.println("Processing page " + page);
             String xmlString = handler.getList(provider, list, optIn, page++);
-            System.out.println(xmlString);
+            // System.out.println(xmlString);
             parse(xmlString, new Tweets(tweetArr));
          }
       }
@@ -77,6 +77,29 @@ public final class TwitterProxy
       for (SocialPost post : tweetArr)
          if (post != null)
             post.setSource(list);
+
+      return tweetArr;
+   }
+
+   public static SocialPost[] getPosts(String user, int numberOfPosts)
+   {
+      SocialPost[] tweetArr = new SocialPost[numberOfPosts];
+      try
+      {
+         int page = 1;
+         System.out.println("Filling " + tweetArr.length + " tweets");
+         while (tweetArr[tweetArr.length - 1] == null && page < 10)
+         {
+            // System.out.println("Processing page " + page);
+            String xmlString = handler.getPosts(user, page++);
+            // System.out.println(xmlString);
+            parse(xmlString, new Tweets(tweetArr));
+         }
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
 
       return tweetArr;
    }

@@ -6,6 +6,7 @@ import java.io.PrintStream;
 
 import uk.ac.shef.dcs.com262.week1.Week1Framework;
 import uk.ac.shef.dcs.com262.week4.Controller;
+import uk.ac.shef.dcs.com262.week6.DataGatherer;
 import uk.ac.shef.dcs.twitter.TwitterProxy;
 
 public class Runner
@@ -37,6 +38,11 @@ public class Runner
          Week1Framework.runWeek1(args[1]);
       else if (args[0].equals("week4"))
          Controller.main(new String[0]);
+      else if (args[0].equals("week6"))
+      {
+         DataGatherer gather = new DataGatherer();
+         gather.run();
+      }
    }
 
    int counter1 = 0;
