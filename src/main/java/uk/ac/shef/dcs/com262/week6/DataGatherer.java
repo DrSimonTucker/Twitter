@@ -8,14 +8,38 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import uk.ac.shef.dcs.Runner;
 import uk.ac.shef.dcs.SocialPost;
 import uk.ac.shef.dcs.twitter.TwitterProxy;
 
 public class DataGatherer
 {
+   public void buildData(File outFile) throws IOException
+   {
+      Runner temp = new Runner();
+      List<SocialPost> posts = new LinkedList<SocialPost>();
+
+      Set<String> filmStaff = new TreeSet<String>();
+      filmStaff.addAll(TwitterProxy.getFeedUsers("guardian", "film-staff"));
+
+      System.out.println("Found " + filmStaff.size() + " Users");
+      for (String user : filmStaff)
+      {
+         SocialPost[] arr = TwitterProxy.getPosts(user, 200);
+         for (SocialPost post : arr)
+            posts.add(post);
+      }
+
+      PrintStream ps = new PrintStream(outFile);
+      for (SocialPost post : posts)
+         if (post != null)
+            ps.println(temp.buildResult(post));
+      ps.close();
+   }
+
    public void run()
    {
-      File outFile = new File("wee6.data");
+      File outFile = new File("week6.data");
       try
       {
          buildData(outFile);
@@ -24,29 +48,5 @@ public class DataGatherer
       {
          e.printStackTrace();
       }
-   }
-
-   public void buildData(File outFile) throws IOException
-   {
-      List<SocialPost> posts = new LinkedList<SocialPost>();
-
-      SocialPost[] arr = TwitterProxy.getFeedList("guardian", "film-staff", 200);
-      Set<String> filmStaff = new TreeSet<String>();
-      for (SocialPost post : arr)
-         if (post != null)
-            filmStaff.add(post.getUsername());
-
-      System.out.println("Found " + filmStaff.size() + " Users");
-      for (String user : filmStaff)
-      {
-         arr = TwitterProxy.getPosts(user, 200);
-         for (SocialPost post : arr)
-            posts.add(post);
-      }
-
-      PrintStream ps = new PrintStream(outFile);
-      for (SocialPost post : posts)
-         ps.println(post);
-      ps.close();
    }
 }

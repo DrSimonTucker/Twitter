@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -16,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.shef.dcs.SocialPost;
 import uk.ac.shef.dcs.twitter.handlers.Tweets;
+import uk.ac.shef.dcs.twitter.handlers.Users;
 
 /**
  * Proxy for accessing twitter
@@ -81,27 +84,21 @@ public final class TwitterProxy
       return tweetArr;
    }
 
-   public static SocialPost[] getPosts(String user, int numberOfPosts)
+   public static TreeSet<String> getFeedUsers(String owner, String list)
    {
-      SocialPost[] tweetArr = new SocialPost[numberOfPosts];
+      TreeSet<String> users = new TreeSet<String>();
       try
       {
-         int page = 1;
-         System.out.println("Filling " + tweetArr.length + " tweets");
-         while (tweetArr[tweetArr.length - 1] == null && page < 10)
-         {
-            // System.out.println("Processing page " + page);
-            String xmlString = handler.getPosts(user, page++);
-            // System.out.println(xmlString);
-            parse(xmlString, new Tweets(tweetArr));
-         }
+         // System.out.println("Processing page " + page);
+         String xmlString = handler.getSubscribers(owner, list);
+         parse(xmlString, users);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
 
-      return tweetArr;
+      return users;
    }
 
    /**
@@ -182,12 +179,54 @@ public final class TwitterProxy
       return posts.toArray(new SocialPost[0]);
    }
 
+   public static SocialPost[] getPosts(String user, int numberOfPosts)
+   {
+      SocialPost[] tweetArr = new SocialPost[numberOfPosts];
+      try
+      {
+         int page = 1;
+         System.out.println("Filling " + tweetArr.length + " tweets");
+         while (tweetArr[tweetArr.length - 1] == null && page < 10)
+         {
+            // System.out.println("Processing page " + page);
+            String xmlString = handler.getPosts(user, page++);
+            // System.out.println(xmlString);
+            parse(xmlString, new Tweets(tweetArr));
+         }
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+      return tweetArr;
+   }
+
    /**
     * Opts you out of using twitter
     */
    public static void optOut()
    {
       optIn = false;
+   }
+
+   private static Set<String> parse(final String str, TreeSet<String> users) throws IOException
+   {
+      Users handlerIn = new Users(users);
+      try
+      {
+         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+         parser.parse(new InputSource(new StringReader(str)), handlerIn);
+      }
+      catch (SAXException e)
+      {
+         throw new IOException(e);
+      }
+      catch (ParserConfigurationException e)
+      {
+         throw new IOException(e);
+      }
+      return handlerIn.getData();
    }
 
    /**

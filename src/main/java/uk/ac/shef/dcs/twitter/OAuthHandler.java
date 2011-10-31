@@ -269,6 +269,12 @@ public class OAuthHandler
       return scribeSingleton;
    }
 
+   public final String getSubscribers(final String owner, final String list) throws IOException
+   {
+      return getBody("http://api.twitter.com/1/lists/members.xml?slug=" + list
+            + "&owner_screen_name=" + owner, true);
+   }
+
    /**
     * Get the home timeline response from Twitter
     * 
