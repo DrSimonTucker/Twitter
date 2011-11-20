@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import uk.ac.shef.dcs.com262.assignment.DataBuilder;
 import uk.ac.shef.dcs.com262.week1.Week1Framework;
 import uk.ac.shef.dcs.com262.week4.Controller;
 import uk.ac.shef.dcs.com262.week6.DataGatherer;
@@ -42,6 +43,11 @@ public class Runner
       {
          DataGatherer gather = new DataGatherer();
          gather.run();
+      }
+      else if (args[0].equals("assign-data"))
+      {
+         DataBuilder builder = new DataBuilder();
+         builder.run();
       }
    }
 
